@@ -1,3 +1,5 @@
 {
-    "Service": true
+    "Service": true,
+    "Users": true,
+    "Subscription": true
 }
