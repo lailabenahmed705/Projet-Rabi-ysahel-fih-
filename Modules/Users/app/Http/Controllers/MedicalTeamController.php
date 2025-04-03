@@ -9,14 +9,14 @@ use  Modules\Users\App\Models\MedicalTeam;
 use  Modules\Users\App\Models\Company;
 use Modules\Users\App\Models\User;
 use Modules\Users\App\Models\Role;
-use Modules\Users\App\Models\Currency;
+use Modules\International\App\Models\Currency;
 use Modules\Users\App\Models\Country;
 use Modules\Users\App\Models\State;
 use Modules\Users\App\Models\Dependency;
 use Modules\Users\App\Models\City;
 use  Modules\Service\App\Models\MedicalType;
 use  Modules\Users\App\Models\MedicalService;
-use  Modules\Users\App\Models\MedicalAddress;
+use  Modules\International\App\Models\Address;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
@@ -115,15 +115,16 @@ class MedicalTeamController extends Controller
         $user->save();
 
         // Create the related MedicalAddress record
-        $medicalAddress = new MedicalAddress();
-        $medicalAddress->address_complete = $request->address_complete;
-        $medicalAddress->dependency_id = $request->dependency_id;
-        $medicalAddress->currency_id = $request->currency_id;
-        $medicalAddress->country_id = $request->country_id;
-        $medicalAddress->state_id = $request->state_id;
-        $medicalAddress->city_id = $request->city_id;
-        $medicalAddress->save();
-
+    
+        $address = new Address();
+        $address->address = $request->address;
+        $address->country_id = $request->country_id;
+        $address->state_id = $request->state_id;
+        $address->city_id = $request->city_id;
+        $address->addressable_type = User::class;
+        $address->addressable_id = $user->id;
+        $address->save();
+        
         // Create the related MedicalService record
         $medicalService = new MedicalService();
         $medicalService->language = $request->language;
@@ -141,7 +142,7 @@ class MedicalTeamController extends Controller
         $medicalTeam = new MedicalTeam();
         $medicalTeam->user_id = $user->id;
         $medicalTeam->medical_type_id = $request->medical_type_id;
-        $medicalTeam->medical_address_id = $medicalAddress->id;
+        $medicalTeam->medical_address_id = $address->id;
         $medicalTeam->medical_service_id = $medicalService->id;
         $medicalTeam->save();
 

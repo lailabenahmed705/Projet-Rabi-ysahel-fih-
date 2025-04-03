@@ -1,0 +1,11 @@
+{
+    "name": "International",
+    "alias": "international",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\International\\app\\Providers\\InternationalServiceProvider"
+    ],
+    "files": []
+}

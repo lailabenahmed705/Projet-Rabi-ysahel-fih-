@@ -54,30 +54,7 @@ Route::get('/medical-team/{id}/edit', [MedicalTeamController::class, 'editForm']
 Route::delete('/medical-team/{id}', [MedicalTeamController::class, 'destroy'])->name('medical-team.destroy');
 Route::put('/medical-team/{id}/update', [MedicalTeamController::class, 'updateTeamData'])->name('medical-team.update');
 
-// Routes pour les pharmacies
-Route::get('/pharmacy', [PharmacyController::class, 'index'])->name('pharmacy.pharmacy');
-Route::get('/pharmacy/create', [PharmacyController::class, 'createForm'])->name('pharmacy.createForm');
-Route::post('/pharmacy/store', [PharmacyController::class, 'store'])->name('pharmacy.store');
-Route::get('/pharmacy/edit/{id}', [PharmacyController::class, 'edit'])->name('pharmacy.edit');
-Route::put('/pharmacy/update/{id}', [PharmacyController::class, 'update'])->name('pharmacy.update');
-Route::delete('/pharmacy/{id}', [PharmacyController::class, 'destroy'])->name('pharmacy.destroy');
 
-// Routes pour les laboratoires
-Route::get('/laboratory', [LaboratoryController::class, 'index'])->name('laboratory.laboratory');
-Route::get('/laboratory/create', [LaboratoryController::class, 'createForm'])->name('laboratory.createForm');
-Route::post('/laboratory/store', [LaboratoryController::class, 'store'])->name('laboratory.store');
-Route::get('/laboratory/edit/{id}', [LaboratoryController::class, 'edit'])->name('laboratory.edit');
-Route::put('/laboratory/update/{id}', [LaboratoryController::class, 'update'])->name('laboratory.update');
-Route::delete('/laboratory/{id}', [LaboratoryController::class, 'destroy'])->name('laboratory.destroy');
-
-// Routes pour les pathologies
-Route::get('/pathology', [PathologyTeamController::class, 'index'])->name('pathology-team.pathology-team');
-Route::get('/pathology/create', [PathologyTeamController::class, 'createForm'])->name('pathology.createForm');
-Route::get('/pathology/show/{id}', [PathologyTeamController::class, 'show'])->name('pathology.show');
-Route::post('/pathology/store', [PathologyTeamController::class, 'store'])->name('pathology.store');
-Route::get('/pathology/edit/{id}', [PathologyTeamController::class, 'edit'])->name('pathology.edit');
-Route::put('/pathology/update/{id}', [PathologyTeamController::class, 'update'])->name('pathology.update');
-Route::delete('/pathology/{id}', [PathologyTeamController::class, 'destroy'])->name('pathology.destroy');
 
 //Routes pour les compagnies
 Route::get('/company', [CompanyController::class, 'index'])->name('company.index');
@@ -107,13 +84,17 @@ Route::delete('/company/{id}', [CompanyController::class, 'destroy'])->name('Use
  Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
   // Profile roles routes
-Route::get('/profileroles', [ProfileRoleController::class, 'index'])->name('profileroles.index');
-Route::get('/profileroles/create', [ProfileRoleController::class, 'create'])->name('profileroles.create');
-Route::post('/profileroles', [ProfileRoleController::class, 'store'])->name('profileroles.store');
-Route::get('/profileroles/{profileRole}/edit', [ProfileRoleController::class, 'edit'])->name('profileroles.edit');
-Route::put('/profileroles/{profileRole}', [ProfileRoleController::class, 'update'])->name('profileroles.update');
-Route::get('/profileroles/{profileRole}/show', [ProfileRoleController::class, 'show'])->name('profileroles.show');
-Route::delete('/profileroles/{profileRole}', [ProfileRoleController::class, 'destroy'])->name('profileroles.destroy');
+ 
+
+  Route::prefix('role_permissions')->name('role_permissions.')->group(function () {
+      Route::get('/', [RolePermissionController::class, 'index'])->name('index');
+      Route::get('/create', [RolePermissionController::class, 'create'])->name('create');
+      Route::post('/', [RolePermissionController::class, 'store'])->name('store');
+      Route::get('/{role}/edit', [RolePermissionController::class, 'edit'])->name('edit');
+      Route::put('/{role}', [RolePermissionController::class, 'update'])->name('update');
+      Route::delete('/{role}', [RolePermissionController::class, 'destroy'])->name('destroy');
+  });
+  
 
 // Ajoutez cette ligne pour la route du profil
 //Route::get('/profile', [RoleController::class, 'show'])->name('profile.show');

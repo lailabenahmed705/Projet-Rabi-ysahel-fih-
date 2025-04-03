@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Users\Http\Controllers;
+namespace Modules\Users\App\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Models\ProfileRole;
+use Modules\Users\App\Models\ProfileRole;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\ModelHasPermission;
 
@@ -19,7 +19,7 @@ class ProfileRoleController extends Controller
     {
         Log::info('ProfileRoleController@index called');
         $profileRoles = ProfileRole::all();
-        return view('profileroles.index', compact('profileRoles'));
+        return view('users::profileroles.index', compact('profileRoles'));
     }
 
     public function create()
@@ -27,7 +27,7 @@ class ProfileRoleController extends Controller
         Log::info('ProfileRoleController@create called');
         $models = ModelHelper::getAllModels();
         $permissions = Permission::all();
-        return view('profileroles.create', compact('models', 'permissions'));
+        return view('users::profileroles.create', compact('models', 'permissions'));
     }
 
     public function store(Request $request)
@@ -89,7 +89,7 @@ class ProfileRoleController extends Controller
     $models = ModelHelper::getAllModels();
     $permissions = ['create', 'view', 'update', 'delete'];
 
-    return view('profileroles.edit', compact('profileRole', 'models', 'permissions'));
+    return view('users::profileroles.edit', compact('profileRole', 'models', 'permissions'));
 }
 
 public function update(Request $request, ProfileRole $profileRole)

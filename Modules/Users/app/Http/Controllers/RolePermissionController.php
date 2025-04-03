@@ -1,14 +1,11 @@
 <?php
 
-namespace Modules\Users\Http\Controllers;
+namespace Modules\Users\App\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Models\Role;
-use App\Models\Permission;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RolePermissionController extends Controller
 {
@@ -17,38 +14,31 @@ class RolePermissionController extends Controller
         $roles = Role::all();
         $permissions = Permission::all();
 
-        // Fetch all model names dynamically
-        $models = collect(Schema::getAllTables())->map(function ($table) {
-            return array_values((array) $table)[0];
-        });
-
-        return view('role_permissions.index', compact('roles', 'permissions', 'models'));
+        return view('users::role_permissions.index', compact('roles', 'permissions'));
     }
+    public function create()
+    {
+    $permissions = Permission::all();
+    return view('users::role_permissions.create', compact('permissions'));
+    }
+
 
     public function store(Request $request)
     {
-        $role = Role::find($request->role_id);
+        $request->validate([
+            'role_id' => 'required|exists:roles,id',
+            'permissions' => 'nullable|array',
+        ]);
 
-        // Handle the permissions assignment
-        foreach ($request->models as $modelName => $permissions) {
-            $modelClass = 'App\\Models\\' . ucfirst($modelName);
+        $role = Role::findOrFail($request->role_id);
 
-            if (class_exists($modelClass)) {
-                $modelInstance = new $modelClass;
-
-                // Sync model permissions
-                foreach ($permissions as $permission) {
-                    $permissionModel = Permission::firstOrCreate(['name' => $permission]);
-                    $modelInstance->permissions()->syncWithoutDetaching($permissionModel->id);
-                }
-            }
+        // Synchronisation des permissions pour le rôle
+        if ($request->has('permissions')) {
+            $role->syncPermissions($request->permissions);
+        } else {
+            $role->syncPermissions([]); // Supprime toutes les permissions si aucune sélectionnée
         }
-
-        // Sync role permissions
-        $role->permissions()->sync(array_flatten(array_values($request->models)));
 
         return back()->with('success', 'Permissions updated successfully.');
     }
 }
-
-
