@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Service\app\Http\Controllers\ServiceController;
 use Modules\Service\app\Http\Controllers\MedicalTypeController;
 use Modules\Service\app\Http\Controllers\ServiceCategoryController;
-
+use Modules\Service\app\Http\Controllers\ServiceSubCategoryController;
 
 
     // Routes pour les types médicaux
@@ -30,3 +30,17 @@ use Modules\Service\app\Http\Controllers\ServiceCategoryController;
     Route::get('/service-category/edit/{id}', [ServiceCategoryController::class, 'edit'])->name('service-category.edit');
     Route::put('/service-category/{id}', [ServiceCategoryController::class, 'update'])->name('service-category.update');
     Route::delete('/service-category/{id}', [ServiceCategoryController::class, 'destroy'])->name('service-category.destroy');
+
+     // Afficher la liste des subcategories
+     Route::get('service-subcategories', [ServiceSubCategoryController::class, 'index'])->name('service-subcategories.index');
+
+    // Afficher le formulaire de création d'une subcategory
+     Route::get('service-subcategories/create', [ServiceSubCategoryController::class, 'create'])->name('service-subcategories.create');
+
+    // Enregistrer une nouvelle subcategory
+     Route::post('service-subcategories', [ServiceSubCategoryController::class, 'store'])->name('service-subcategories.store');
+
+     Route::get('service-subcategories/{service_subcategory}/edit', [ServiceSubCategoryController::class, 'edit'])->name('service-subcategories.edit');
+
+     Route::delete('service-subcategories/{service_subcategory}/destroy', [ServiceSubCategoryController::class, 'destroy'])->name('service-subcategories.destroy');
+

@@ -1,6 +1,9 @@
 <?php
 
-namespace Modules\Subscription\Entities;
+namespace Modules\Subscription\app\Models;
+use Modules\Subscription\app\Models\Feature;
+
+
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +13,7 @@ use App\Models\Concerns\HandlesRecurrence;
 
 class Plan extends Model
 {
-    use HandlesRecurrence;
+   // use HandlesRecurrence;
     use HasFactory;
     use SoftDeletes;
 
@@ -30,7 +33,7 @@ class Plan extends Model
     // Relation many-to-many avec le modèle Feature
     public function features()
     {
-        return $this->belongsToMany('App\Models\Feature', 'feature_plan', 'plan_id', 'feature_id');
+        return $this->belongsToMany('\Modules\Subscription\app\Models\Feature', 'feature_plan', 'plan_id', 'feature_id');
     }
 
     // Relation one-to-many avec le modèle Subscription
@@ -67,6 +70,6 @@ class Plan extends Model
     }
     public function role()
     {
-        return $this->belongsTo('App\Models\Role', 'role_id');
+        return $this->belongsTo('\Modules\Permission\app\Models\Role', 'role_id');
     }
 }

@@ -5,6 +5,9 @@ namespace Modules\users\app\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\International\App\Models\Address; // ✅ correct
+use Modules\Users\App\Models\User; 
+
 
 class MedicalTeam extends Model
 {
@@ -31,9 +34,17 @@ class MedicalTeam extends Model
 
 
     public function medicalAddress()
-    {
-        return $this->belongsTo(MedicalAddress::class, 'medical_address_id');
-    }
+{
+    return $this->belongsTo('\Modules\International\app\Models\Address'::class, 'medical_address_id');
+}
+
+
+
+    public function address()
+{
+    return $this->belongsTo('\Modules\Users\app\Models\MedicalServiceAddress'::class, 'address_id');
+}
+
 
     public function medicalService()
     {
@@ -53,7 +64,7 @@ class MedicalTeam extends Model
   
         public function serviceCategories()
     {
-        return $this->belongsToMany(ServiceCategory::class, 'chosen_services', 'medical_team_id', 'service_category_id');
+        return $this->belongsToMany(\Modules\Service\app\Models\ServiceCategory::class, 'chosen_services', 'medical_team_id', 'service_category_id');
     }
 
     public function generateTimeSlots()
@@ -92,7 +103,7 @@ public function availabilities()
 
 public function appointments()
 {
-    return $this->hasMany(Appointment::class);
+    return $this->hasMany(\Modules\Appointments\app\Models\Appointment::class);
 }
 public function availabilitySetting()
 {

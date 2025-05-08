@@ -1,0 +1,11 @@
+{
+    "name": "Pathologies",
+    "alias": "pathologies",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Pathologies\\app\\Providers\\PathologiesServiceProvider"
+    ],
+    "files": []
+}

@@ -2,5 +2,15 @@
     "Service": true,
     "Users": true,
     "Subscription": true,
-    "International": true
+    "International": true,
+    "Appointments": true,
+    "Pathology": true,
+    "PathologyTeam": true,
+    "Pathologies": true,
+    "Dashboard": true,
+    "Pharmacy": true,
+    "Laboratory": true,
+    "Permission": false,
+    "HomePage": false,
+    "Patient": true
 }

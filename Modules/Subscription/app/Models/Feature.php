@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Subscription\Entities;
+namespace Modules\Subscription\app\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +11,7 @@ use App\Models\Concerns\HandlesRecurrence;
 
 class Feature extends Model
 {
-    use HandlesRecurrence;
+    //use HandlesRecurrence;
     use HasFactory;
     use SoftDeletes;
 

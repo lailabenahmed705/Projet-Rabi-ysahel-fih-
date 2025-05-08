@@ -26,7 +26,8 @@
                 @foreach($serviceCategories as $serviceCategory)
                     <tr>
                         <th scope="row">{{ $serviceCategory->id }}</th>
-                        <td>{{ $serviceCategory->medicalType->name }}</td>
+                        <td>{{ optional($serviceCategory->medicalType)->name ?? '-' }}</td>
+
                         <td>{{ $serviceCategory->name }}</td>
                         <td>
                             <div class="dropdown">

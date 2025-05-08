@@ -1,23 +1,26 @@
 <?php
 
-namespace Modules\Subscription\Http\Controllers;
+namespace Modules\Subscription\app\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Subscription\Entities\Feature;
+use Modules\Subscription\app\Models\Feature; 
 
 class FeatureController extends Controller
 {
     /**
      * Display a listing of the features.
-     *
+     *@param  int  $id
      * @return \Illuminate\Contracts\View\View
      */
+   
+    
+    
     public function index()
     {
         $features = Feature::all();
-        return view('features.index', compact('features'));
+        return view('subscription::features.index', compact('features'));
     }
 
     /**
@@ -27,7 +30,7 @@ class FeatureController extends Controller
      */
     public function create()
     {
-        return view('features.create');
+        return view('subscription::features.create');
     }
 
     /**
@@ -51,4 +54,6 @@ class FeatureController extends Controller
 
         return redirect()->route('features.index')->with('success', 'Feature added successfully.');
     }
+    
+   
 }

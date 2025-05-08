@@ -70,4 +70,11 @@ $container = ($container ?? 'container-xxl');
     <div class="drag-target"></div>
   </div>
   <!-- / Layout wrapper -->
+<!-- Laravel Mix JS -->
+<script src="{{ mix('js/app.js') }}"></script>
+
+
+<!-- Scripts empilés -->
+@stack('scripts')
+
   @endsection

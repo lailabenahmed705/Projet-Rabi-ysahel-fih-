@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Modules\Service\app\Models\Service;
 use Modules\Service\app\Models\ServiceCategory;
+use Illuminate\Support\Facades\Auth;
+use Modules\Service\app\Models\ChosenService;
 
 class ServiceController extends Controller
 {
@@ -48,7 +50,7 @@ class ServiceController extends Controller
         $service = Service::findOrFail($id);
 
         // Passez les données à la vue d'édition
-        return view('service.edit', compact('service'));
+        return view('service::service.edit', compact('service'));
     }
 
 
@@ -82,4 +84,28 @@ class ServiceController extends Controller
 
         return redirect()->route('service.index')->with('success', 'Service deleted successfully.');
     }
+
+    
+
+public function showspecandserv()
+{
+    $user = Auth::user();
+
+    // Vérifie si l'utilisateur a une équipe médicale associée
+    if (!$user || !$user->medicalTeam) {
+        return redirect()->back()->with('error', 'Medical team not found for user.');
+    }
+
+    $medicalTeamId = $user->medicalTeam->id;
+
+    // On récupère les catégories de services déjà choisies
+    $chosenServiceIds = ChosenService::where('medical_team_id', $medicalTeamId)
+        ->pluck('service_category_id');
+
+    // On récupère les catégories associées à ces IDs
+    $subCategories = '\Modules\Service\app\Models\ServiceCategory'::whereIn('id', $chosenServiceIds)->get();
+
+    return view('dashboard::Dashboard.Specandserv', compact('subCategories'));
+}
+
 }

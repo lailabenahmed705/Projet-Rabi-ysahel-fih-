@@ -5,6 +5,8 @@ namespace Modules\users\app\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use Modules\International\App\Models\Address; 
+
 class Company extends Model
 {
     use HasFactory;
@@ -44,12 +46,12 @@ class Company extends Model
     }
 
 
-
-    public function companyAddress()
-    {
-        return $this->belongsTo(CompanyAddress::class, 'address_id');
-    }
-
+   
+  
+  public function address()
+  {
+    return $this->morphOne(Address::class, 'addressable');
+}
 
 
     // Ajoutez une règle de validation unique pour le champ 'name'

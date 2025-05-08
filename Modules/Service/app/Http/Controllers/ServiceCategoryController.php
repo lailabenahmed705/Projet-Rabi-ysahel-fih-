@@ -14,7 +14,7 @@ class ServiceCategoryController extends Controller
     public function index()
     {
         $serviceCategories = ServiceCategory::all();
-        return view('service::service-category\service-category', compact('serviceCategories'));
+        return view('service::service-category.service-category', compact('serviceCategories'));
     }
 
     public function createForm()
@@ -56,7 +56,7 @@ class ServiceCategoryController extends Controller
       $serviceCategory = ServiceCategory::findOrFail($id);
 
       // Passez les données à la vue d'édition
-      return view('service-category.edit', compact('serviceCategory'));
+      return view('service::service-category.edit', compact('serviceCategory'));
     }
 
     public function update(Request $request, $id)

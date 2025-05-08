@@ -15,6 +15,7 @@ return new class extends Migration {
         ->foreignId('state_id')
         ->constrained('states')
         ->onDelete('cascade');
+      $table->foreignId('dependency_id')->nullable();
       $table->enum('status', ['active', 'inactive']);
       $table->timestamp('created_at')->nullable();
       $table->timestamp('updated_at')->nullable();

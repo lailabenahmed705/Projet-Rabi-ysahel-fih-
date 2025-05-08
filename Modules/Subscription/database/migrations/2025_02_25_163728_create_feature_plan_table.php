@@ -17,7 +17,7 @@ return new class () extends Migration {
           $table->foreignId('plan_id')->constrained('plans')->cascadeOnDelete();
           $table->foreignId('feature_id')->constrained('features')->cascadeOnDelete();
 
-            $table->decimal('charges')->nullable();
+          $table->decimal('charges', 8, 2)->nullable();
             $table->timestamps();
 
             $table->primary(['plan_id','feature_id' ]);

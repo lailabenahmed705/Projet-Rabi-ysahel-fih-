@@ -1,0 +1,22 @@
+<?php
+
+namespace Modules\Appointments\app\Listeners;
+
+use Modules\Appointments\app\Events\AppointmentCreated;
+use Modules\Appointments\app\Notifications\NewAppointmentNotification;
+
+class NotifyMedicalTeam
+{
+    public function handle(AppointmentCreated $event)
+    {
+        $appointment = $event->appointment;
+
+        // On récupère le user lié à la medical_team sélectionnée
+        $user = $appointment->medicalTeam?->user;
+
+        if ($user) {
+            $user->notify(new NewAppointmentNotification($appointment));
+        }
+    }
+}
+

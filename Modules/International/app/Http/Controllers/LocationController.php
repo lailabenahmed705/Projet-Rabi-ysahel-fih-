@@ -33,15 +33,20 @@ class LocationController extends Controller
   }
 
   public function storeCountry(Request $request)
-  {
+{
     $request->validate([
-      'name' => 'required|string',
-      'iso3' => 'required|string',
-      'numeric_code' => 'required|string',
-      'phone_code' => 'required|string',
-      'currency_name' => 'required|string',
-      'region' => 'required|string',
-      'status' => 'required|in:active,inactive',
+        'name' => 'required|string|unique:countries,name',
+        'iso3' => 'required|string|unique:countries,iso3',
+        'numeric_code' => 'required|string|unique:countries,numeric_code',
+        'phone_code' => 'required|string|unique:countries,phone_code',
+        'currency_name' => 'required|string',
+        'region' => 'required|string',
+        'status' => 'required|in:active,inactive',
+    ], [
+        'name.unique' => 'This country name already exists.',
+        'iso3.unique' => 'This ISO3 code already exists.',
+        'numeric_code.unique' => 'This numeric code already exists.',
+        'phone_code.unique' => 'This phone code already exists.',
     ]);
 
     Country::create($request->all());
@@ -49,7 +54,17 @@ class LocationController extends Controller
     return redirect()
       ->route('locations.countries.index')
       ->with('success', 'Country created successfully.');
-  }
+}
+public function destroyCountry(Country $country)
+{
+    $country->delete();
+
+    return redirect()
+        ->route('locations.countries.index')
+        ->with('success', 'Country deleted successfully.');
+}
+
+
 
   public function updateCountry(Request $request, Country $country)
   {
@@ -78,19 +93,23 @@ class LocationController extends Controller
 
   public function storeState(Request $request)
   {
-    $request->validate([
-      'name' => 'required|string',
-      'iso_code' => 'required|string',
-      'country_id' => 'required|exists:countries,id',
-      'status' => 'required|in:active,inactive',
-    ]);
-
-    State::create($request->all());
-
-    return redirect()
-      ->route('locations.states.index')
-      ->with('success', 'State created successfully.');
+      $request->validate([
+          'name' => 'required|string|unique:states,name',
+          'iso_code' => 'required|string|unique:states,iso_code',
+          'country_id' => 'required|exists:countries,id',
+          'status' => 'required|in:active,inactive',
+      ], [
+          'name.unique' => 'This state name already exists.',
+          'iso_code.unique' => 'This ISO code already exists.',
+      ]);
+  
+      State::create($request->all());
+  
+      return redirect()
+          ->route('locations.states.index')
+          ->with('success', 'State created successfully.');
   }
+  
   public function editState(State $state)
   {
     $countries = Country::all();
@@ -117,6 +136,16 @@ class LocationController extends Controller
       ->with('success', 'State updated successfully.');
   }
 
+  public function destroy($id)
+{
+    $state = State::findOrFail($id);
+    $state->delete();
+
+    return redirect()
+        ->route('locations.states.index') // adapte ce nom selon ta route
+        ->with('success', 'State deleted successfully.');
+}
+
   public function showCities()
   {
     $cities = City::all();
@@ -131,25 +160,28 @@ class LocationController extends Controller
 
   public function storeCity(Request $request)
   {
-    $request->validate([
-      'name' => 'required|string',
-      'postal_code' => 'required|string|unique:cities,postal_code', // Correction ici
-      'state_id' => 'required|exists:states,id',
-      'status' => 'required|in:active,inactive',
-    ]);
-
-    City::create([
-      'name' => $request->name,
-      'postal_code' => $request->postal_code,
-      'state_id' => $request->state_id,
-      'status' => $request->status ?? 'inactive', // Correction ici
-    ]);
-
-    return redirect()
-      ->route('locations.cities.index')
-      ->with('success', 'City created successfully.');
+      $request->validate([
+          'name' => 'required|string|unique:cities,name',
+          'postal_code' => 'required|string|unique:cities,postal_code',
+          'state_id' => 'required|exists:states,id',
+          'status' => 'required|in:active,inactive',
+      ], [
+          'name.unique' => 'This city name already exists.',
+          'postal_code.unique' => 'This postal code already exists.',
+      ]);
+  
+      City::create([
+          'name' => $request->name,
+          'postal_code' => $request->postal_code,
+          'state_id' => $request->state_id,
+          'status' => $request->status ?? 'inactive',
+      ]);
+  
+      return redirect()
+          ->route('locations.cities.index')
+          ->with('success', 'City created successfully.');
   }
-
+  
   public function editCity(City $city)
   {
     $states = State::all(); // Ajoute cette ligne pour récupérer les États
@@ -179,7 +211,7 @@ class LocationController extends Controller
   }
   public function editDependency(dependency $dependency)
   {
-      return view('location::locations.dependencies.edit', compact('dependency'));
+      return view('international::dependencies.dependencies.edit', compact('dependency'));
   }
 
   public function updateDependency(Request $request, Dependency $dependency)
@@ -194,7 +226,7 @@ class LocationController extends Controller
   {
       // Logique pour afficher la liste des dépendances
       $dependencies = Dependency::all(); // Assurez-vous que votre modèle Dependency est correctement importé
-      return view('location::locations.dependencies.index', compact('dependencies'));
+      return view('international::locations.dependencies.index', compact('dependencies'));
   }
   public function destroyDependency(Dependency $dependency)
   {

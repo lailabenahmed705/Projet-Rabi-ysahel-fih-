@@ -56,7 +56,8 @@
                                     <tr>
                                         <td>{{ $state->name }}</td>
                                         <td>{{ $state->iso_code }}</td>
-                                        <td>{{ $state->country->name }}</td>
+                                        <td>{{ data_get($state, 'country.name', '-') }}</td>
+
                                         <td>{{ ucfirst($state->status) }}</td>
                                         <td>
                                             <div class="dropdown">

@@ -19,7 +19,7 @@ class Invoice extends Model
      * @var array
      */
     protected $fillable = [
-        'order_identifier', 'total_price', 'plan_id', 'user_email', 'user_name', 'user_id', 'reference'
+        'order_identifier', 'total_price', 'plan_id', 'user_email', 'user_name', 'user_id'
     ];
 
     /**
@@ -49,13 +49,5 @@ class Invoice extends Model
     /**
      * Boot method for model events.
      */
-    protected static function boot()
-    {
-        parent::boot();
-
-        // Automatically generating a unique reference number for each invoice
-        static::creating(function ($invoice) {
-            $invoice->reference = 'FR' . sprintf('%05d', mt_rand(10000, 99999));
-        });
-    }
+   
 }

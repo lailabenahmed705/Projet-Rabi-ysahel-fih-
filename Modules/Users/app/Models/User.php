@@ -1,6 +1,6 @@
 <?php
 namespace Modules\Users\app\Models;
-
+use Modules\Users\App\Models\MedicalTeam;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -8,9 +8,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Traits\HasRoles;  // Import HasRoles trait
 
+
+
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;  // Add HasRoles trait here
+    use HasFactory, Notifiable, HasRoles;  
 
     protected $fillable = [
         'name',
@@ -29,7 +31,7 @@ class User extends Authenticatable
 
     public function role()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo('Modules\Users\app\Models\Role'::class,'role_id');
     }
 
     protected static function boot()
@@ -53,6 +55,9 @@ class User extends Authenticatable
 
     public function medicalTeam()
     {
-        return $this->hasOne(MedicalTeam::class);
+
+        return $this->hasOne('\Modules\Users\App\Models\MedicalTeam'::class, 'user_id');
     }
+
+    
 }

@@ -15,7 +15,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/2.9.8/leaflet-search.min.js"></script>
 
 <h4 class="py-3 mb-4">
-    <span class="text-muted fw-light">Account Settings /</span> Locations
+    <span class="text-muted fw-light">Locations Settings </span> 
 </h4>
 <div class="row">
     <div class="col-md-12">

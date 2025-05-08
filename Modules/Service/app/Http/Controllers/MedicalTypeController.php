@@ -17,7 +17,7 @@ class MedicalTypeController extends Controller
     public function index()
     {
         $medicalTypes = MedicalType::all();
-        return view('service::medical-type/medical-type', compact('medicalTypes'));
+        return view('service::medical-type.medical-type', compact('medicalTypes'));
     }
 
     public function createForm()
@@ -40,7 +40,7 @@ class MedicalTypeController extends Controller
             $slug = $this->makeUniqueSlug($slug);
 
             // Ajoutez une alerte à la session
-            return redirect()->route('medical-type.create')->withErrors(['name' => 'Le nom du type médical existe déjà. Un slug unique a été généré.']);
+            return redirect()->route('Service::medical-type.create')->withErrors(['name' => 'Le nom du type médical existe déjà. Un slug unique a été généré.']);
         }
 
         $medicalType = MedicalType::create([
@@ -80,7 +80,7 @@ class MedicalTypeController extends Controller
 
         if (!$medicalType) {
             // Gérez le cas où l'enregistrement n'est pas trouvé
-            return redirect()->route('medical-type.index')->with('error', 'Medical Type not found.');
+            return redirect()->route(':medical-type.index')->with('error', 'Medical Type not found.');
         }
 
         // Supprimez les enregistrements liés dans la table service_categories
@@ -101,7 +101,7 @@ class MedicalTypeController extends Controller
         $medicalType = MedicalType::findOrFail($id);
 
         // Passez les données à la vue d'édition
-        return view('medical-type.edit', compact('medicalType'));
+        return view('Service::medical-type.edit', compact('medicalType'));
     }
     public function update(Request $request, $id)
     {
@@ -110,7 +110,7 @@ class MedicalTypeController extends Controller
         $medicalType = MedicalType::find($id);
 
         if (!$medicalType) {
-            return redirect()->route('medical-type.index')->with('error', 'Medical Type not found.');
+            return redirect()->route('Service::medical-type.index')->with('error', 'Medical Type not found.');
         }
 
         // Effectuez la mise à jour en fonction des données du formulaire
@@ -120,7 +120,7 @@ class MedicalTypeController extends Controller
         ]);
 
         // Redirigez vers la liste des types médicaux après la mise à jour
-        return redirect()->route('medical-type.index')->with('success', 'Medical Type updated successfully.');
+        return redirect()->route('Service::medical-type.index')->with('success', 'Medical Type updated successfully.');
     }
 
     public function serviceCategories()

@@ -28,29 +28,33 @@ class CurrencyController extends Controller
    * @return \Illuminate\Http\RedirectResponse
    */
   public function store(Request $request)
-  {
+{
     $request->validate([
-      'name' => 'required|string|unique:currencies,name',
-      'iso_code' => 'required|string',
-      'exchange_rate' => 'required|numeric',
-      'decimals' => 'integer',
-      'status' => 'required|in:active,inactive',
-      'symbol' => 'required|string',
+        'name' => 'required|string|unique:currencies,name',
+        'iso_code' => 'required|string|unique:currencies,iso_code',
+        'exchange_rate' => 'required|numeric',
+        'decimals' => 'nullable|integer',
+        'status' => 'required|in:active,inactive',
+        'symbol' => 'required|string',
+    ], [
+        'name.unique' => 'This currency name already exists.',
+        'iso_code.unique' => 'This ISO code already exists.',
     ]);
 
     Currency::create([
-      'name' => $request->name,
-      'iso_code' => $request->iso_code,
-      'exchange_rate' => $request->exchange_rate,
-      'decimals' => $request->decimals,
-      'status' => $request->status,
-      'symbol' => $request->symbol,
+        'name' => $request->name,
+        'iso_code' => $request->iso_code,
+        'exchange_rate' => $request->exchange_rate,
+        'decimals' => $request->decimals,
+        'status' => $request->status,
+        'symbol' => $request->symbol,
     ]);
 
     return redirect()
-      ->route('currencies.index')
-      ->with('success', 'La devise a été ajoutée avec succès.');
-  }
+        ->route('currencies.index')
+        ->with('success', 'La devise a été ajoutée avec succès.');
+}
+
 
   /**
    * Supprimer une devise.

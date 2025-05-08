@@ -3,7 +3,7 @@
 @section('title', 'Location Settings')
 
 @section('content')
-@include('location::layouts.locationHeader')
+@include('international::layouts.locationHeader')
 
 <div class="container-fluid">
     <div class="row justify-content-center">

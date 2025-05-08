@@ -12,6 +12,7 @@ use Modules\Users\HttpServiceCategory;
 use Modules\Users\App\Models\Company;
 
 
+
 class CompanyController extends Controller
 {
     public function index()
@@ -35,7 +36,7 @@ class CompanyController extends Controller
             'manager' => $request->input('manager'),
         ]);
 
-        return redirect()->route('users::company.index')->with('success', 'Company added successfully.');
+        return redirect()->route('company.index')->with('success', 'Company added successfully.');
     }
 
     public function showCompanies()
@@ -49,12 +50,12 @@ class CompanyController extends Controller
         $company = Company::find($id);
 
         if (!$company) {
-            return redirect()->route('users::company.index')->with('error', 'Company not found.');
+            return redirect()->route('company.index')->with('error', 'Company not found.');
         }
 
         $company->delete();
 
-        return redirect()->route('users::company.index')->with('success', 'Company deleted successfully.');
+        return redirect()->route('company.index')->with('success', 'Company deleted successfully.');
     }
 
     public function editForm($id)

@@ -33,6 +33,8 @@ Route::prefix('/')->group(function () {
     Route::get('/locations/countries/{country}/edit', [LocationController::class, 'editCountry'])->name(
       'locations.countries.edit'
     );
+    Route::delete('/countries/{country}', [LocationController::class, 'destroyCountry'])->name('locations.countries.destroy');
+
   
     Route::patch('/locations/countries/{country}', [LocationController::class, 'updateCountry'])->name(
       'locations.countries.update'

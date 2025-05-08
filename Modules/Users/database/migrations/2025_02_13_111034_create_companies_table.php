@@ -18,9 +18,9 @@ class CreateCompaniesTable extends Migration
             $table->id(); // Primary key
             $table->string('company_name');
             $table->string('company_type');
-           /* $table->foreignId('city_id')->constrained('cities');
-            $table->foreignId('dependency_id')->constrained('dependencies');
-            $table->string('address_complete')->nullable();*/
+           $table->foreignId('city_id')->constrained('cities');
+           // $table->foreignId('dependency_id')->constrained('dependencies');
+            $table->string('address_complete')->nullable();
 
 
             $table->timestamps(); // created_at and updated_at columns

@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Subscription\Entities;
+namespace Modules\Subscription\app\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Concerns\Expires;
 class FeatureTicket extends Model
 {
-    use Expires;
+   // use Expires;
 
     protected $fillable = [
         'charges',

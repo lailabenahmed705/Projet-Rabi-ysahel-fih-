@@ -1,24 +1,34 @@
 <?php
-
-namespace Modules\Subscription\Entities;
-use Modules\Subscription\Entities\Plan;
+namespace Modules\Subscription\app\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use Modules\Subscription\app\Models\Plan;
 
 class Subscription extends Model
 {
-     protected $fillable = [
-        'plan_id', 'started_at', // and other relevant fields
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'plan_id',
+        'role',
+        'price',
+        'starts_at',  
+        'ends_at'
     ];
 
-    public function subscriber()
-    {
-        return $this->morphTo();
-    }
+ 
 
-    public function plan()
-    {
-        return $this->belongsTo(Plan::class);
-    }
+  public function user()
+{
+    return $this->belongsTo(\App\Models\User::class);
+}
+
+  public function plan()
+{
+    return $this->belongsTo(\Modules\Subscription\app\Models\Plan::class);
+}
+
 }

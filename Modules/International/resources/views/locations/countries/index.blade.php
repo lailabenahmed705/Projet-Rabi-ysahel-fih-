@@ -69,7 +69,12 @@
                                                 </button>
                                                 <div class="dropdown-menu">
                                                 <a href="{{ route('locations.countries.edit', $country->id) }}" class="dropdown-item"><i class="mdi mdi-pencil-outline me-1"></i> Edit</a>
+                                                <form action="{{ route('locations.countries.destroy', $country->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this country?');">
                                                 @csrf
+                                                @method('DELETE')
+                                   <button type="submit" class="dropdown-item text-danger">
+                                  <i class="mdi mdi-delete-outline me-1"></i> Delete
+                                   </button>
                                             </div>
                                         </div>
                                     </td>

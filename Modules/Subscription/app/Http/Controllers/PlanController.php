@@ -1,38 +1,42 @@
 <?php
 
-namespace Modules\Subscription\Http\Controllers;
+namespace Modules\Subscription\App\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Subscription\Entities\Plan; 
-use Modules\Users\app\Models\Role; 
-use Modules\checkout\Entities\Tax;
-//use App\Models\Feature;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Modules\Subscription\App\Models\Plan;
+use Modules\Subscription\App\Models\Feature;
+use Modules\Subscription\App\Services\PlanService;
+use Modules\Permission\App\Models\Role;
+use Modules\International\App\Models\Tax;
 
 class PlanController extends Controller
 {
+    protected $planService;
+
+    public function __construct(PlanService $planService)
+    {
+        $this->planService = $planService;
+    }
+
     public function index()
     {
-        $plans = Plan::with('role')->get(); // Eager load roles
-        $count = $plans->count();
-        return view('plans.index', compact('plans', 'count'));
+        $plans = Plan::with(['features', 'role'])->get();
+        return view('subscription::plans.index', compact('plans'));
     }
 
     public function create()
     {
         $features = Feature::all();
-        $assignableRoles = Role::where('subscribe', true)->get(); // Fetch roles where subscribe is true
-        $taxes = Tax::all(); // Fetch all tax rates
+        $roles = Role::all();
+        $taxes = Tax::all();
 
-        return view('plans.create', compact('features', 'assignableRoles', 'taxes'));
+        return view('subscription::plans.create', compact('features', 'roles', 'taxes'));
     }
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string',
             'grace_days' => 'required|integer',
             'price_HT' => 'required|numeric',
@@ -42,64 +46,28 @@ class PlanController extends Controller
             'features' => 'array',
             'feature_values' => 'array',
             'currency' => 'required|string|max:3',
-            'status' => 'boolean',
+            'status' => 'nullable|boolean',
         ]);
 
-        Log::info('Validation passed.');
+        $this->planService->create($validated);
 
-        // Convert periodicity number to string
-        $periodicityMap = [
-            '1' => 'Monthly',
-            '3' => 'Quarterly',
-            '12' => 'Annually'
-        ];
-
-        $periodicityString = $periodicityMap[$validatedData['periodicity']] ?? 'Unknown';
-
-        // Create the plan
-        $plan = Plan::create([
-            'name' => $validatedData['name'],
-            'grace_days' => $validatedData['grace_days'],
-            'price_HT' => $validatedData['price_HT'],
-            'price' => $validatedData['price'],
-            'periodicity_type' => $periodicityString,
-            'role_id' => $validatedData['assigned_role'],
-            'currency' => $validatedData['currency'],
-            'status' => $request->has('status') ? 1 : 0,
-        ]);
-
-        // Attach features to the plan with values if any
-        if (isset($validatedData['features'])) {
-            foreach ($validatedData['features'] as $featureId) {
-                $value = $validatedData['feature_values'][$featureId] ?? null;
-                $timestamps = [
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-                $plan->features()->attach($featureId, array_merge(['charges' => $value], $timestamps));
-            }
-        }
-
-        return redirect()->route('plans.index')->with('success', 'Plan added successfully!');
+        return redirect()->route('plans.index')->with('success', 'Plan ajouté avec succès.');
     }
 
     public function edit($id)
     {
-        $plan = Plan::findOrFail($id);
+        $plan = Plan::with('features')->findOrFail($id);
         $features = Feature::all();
-        $assignableRoles = Role::where('subscribe', true)->get();
-        $taxes = Tax::all(); // Fetch all tax rates
-
-        // Fetch existing feature values
+        $roles = Role::all();
+        $taxes = Tax::all();
         $featureValues = $plan->features->pluck('pivot.charges', 'id')->toArray();
 
-        return view('plans.edit', compact('plan', 'features', 'assignableRoles', 'featureValues','taxes'));
+        return view('subscription::plans.edit', compact('plan', 'features', 'roles', 'taxes', 'featureValues'));
     }
 
     public function update(Request $request, Plan $plan)
     {
-        // Validate request data
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string',
             'grace_days' => 'required|integer',
             'price_HT' => 'required|numeric',
@@ -109,63 +77,23 @@ class PlanController extends Controller
             'features' => 'array',
             'feature_values' => 'array',
             'currency' => 'required|string|max:3',
-            'status' => 'boolean',
+            'status' => 'nullable|boolean',
         ]);
 
-        // Convert periodicity number to string
-        $periodicityMap = [
-            '1' => 'Monthly',
-            '3' => 'Quarterly',
-            '12' => 'Annually'
-        ];
+        $this->planService->update($plan, $validated);
 
-        $periodicityString = $periodicityMap[$validatedData['periodicity']] ?? 'Unknown';
-
-        // Update the plan
-        $plan->update([
-            'name' => $validatedData['name'],
-            'grace_days' => $validatedData['grace_days'],
-            'price_HT' => $validatedData['price_HT'],
-            'price' => $validatedData['price'],
-            'periodicity_type' => $periodicityString,
-            'role_id' => $validatedData['assigned_role'],
-            'currency' => $validatedData['currency'],
-            'status' => $request->has('status') ? 1 : 0,
-        ]);
-
-        // Synchronize the selected features with values and timestamps
-        $features = [];
-        if (isset($validatedData['features'])) {
-            foreach ($validatedData['features'] as $featureId) {
-                $value = $validatedData['feature_values'][$featureId] ?? null;
-                $features[$featureId] = array_merge(['charges' => $value], [
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-        }
-        $plan->features()->sync($features);
-
-        return redirect()->route('plans.index')->with('success', 'Plan updated successfully.');
-    }
-
-    public function show($id)
-    {
-        $plan = Plan::with(['features', 'role'])->findOrFail($id);
-        return view('plans.show', compact('plan'));
+        return redirect()->route('plans.index')->with('success', 'Plan mis à jour avec succès.');
     }
 
     public function destroy(Plan $plan)
     {
         $plan->delete();
-        return redirect()->route('plans.index')->with('success', 'Plan deleted successfully.');
+        return redirect()->route('plans.index')->with('success', 'Plan supprimé avec succès.');
     }
 
-    // Front-end
-    public function indexfront()
+    public function show($id)
     {
-        $userRoleId = Auth::user()->role_id;
-        $plans = Plan::where('role_id', $userRoleId)->get();
-        return view('Dashboard.packages', compact('plans'));
+        $plan = Plan::with(['features', 'role'])->findOrFail($id);
+        return view('subscription::plans.show', compact('plan'));
     }
 }

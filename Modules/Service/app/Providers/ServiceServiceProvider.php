@@ -23,6 +23,7 @@ class ServiceServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'database/migrations'));
         $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
+        //$this->loadViewsFrom(__DIR__.'/../Resources/views', 'Service');
 
     }
 
@@ -32,6 +33,7 @@ class ServiceServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->register(RouteServiceProvider::class);
+        
     }
 
     /**

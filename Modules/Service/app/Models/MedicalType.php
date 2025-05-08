@@ -5,6 +5,7 @@ namespace Modules\Service\app\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Service\Database\factories\MedicalTypeFactory;
+use Modules\Users\app\Models\Role;
 use Illuminate\Support\Str;
 class MedicalType extends Model
 {

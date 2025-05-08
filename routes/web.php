@@ -1,5 +1,8 @@
 <?php
-
+use App\Http\Controllers\HomePageController;
+use App\Http\Controllers\InscriptionController;
+use App\Http\Controllers\AutocompleteController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dashboard\Analytics;
 use App\Http\Controllers\layouts\WithoutMenu;
@@ -44,8 +47,67 @@ use App\Http\Controllers\form_layouts\VerticalForm;
 use App\Http\Controllers\form_layouts\HorizontalForm;
 use App\Http\Controllers\tables\Basic as TablesBasic;
 
-// Main Page Route
-Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
+
+
+Route::get('/', [HomePageController::class, 'index'])->name('accueil');
+
+
+Route::get('/staff', [HomePageController::class, 'showstaff'])->name('staff');
+
+Route::get('/medical_type/{type}', [HomePageController::class, 'showMedicalType'])->name('medical_type');
+
+Route::get('/companies', [HomePageController::class, 'showcompanies'])->name('companies');
+
+
+Route::get('/connexion', [LoginBasic::class, 'index'])->name('connexion');
+
+
+
+/// Main Page Route
+//Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
+/*
+// Route for company
+Route::get('/profile/{id}', [SearchController::class, 'showprofile'])->name('profile');
+Route::get('/pharprofile/{id}', [SearchController::class, 'showpharprofile'])->name('pharprofile');
+Route::get('/labprofile/{id}', [SearchController::class, 'showlabprofile'])->name('labprofile');
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+Route::get('/autocomplete', [SearchController::class,'index']);
+Route::post('/autocomplete/fetch', [SearchController::class,'fetch'])->name('autocomplete.fetch');
+
+Route::get('/medicalteams/{id}/timeslots', [SearchController::class, 'showTimeSlots'])->name('medicalteams.timeslots');
+Route::get('/', [HomePageController::class, 'index'])->name('accueil');
+Route::get('/companies', [HomePageController::class, 'showcompanies'])->name('companies');
+ Route::get('/staff', [HomePageController::class, 'showstaff'])->name('staff');
+ Route::get('/how-it-works', [HomePageController::class, 'showhit'])->name('howitworks');
+ 
+ // Route for medical type
+ Route::get('/medical_type/{type}', [HomePageController::class, 'showMedicalType'])->name('medical_type');
+ // Route for company type
+Route::get('/company_type/{type}', [HomePageController::class, 'showCompanyType'])->name('company_type');
+
+Route::get('/companies', [HomepageController::class, 'showcompany'])->name('companies');
+Route::get('/healthmeds', [HomepageController::class, 'showstaff'])->name('staff');
+Route::get('/healthmeds/m-{medical_type_id}', [HomepageController::class, 'showMedicalType'])->name('homepage.healthmed');
+Route::get('/api/cities', [HomePageController::class, 'getCities']);
+Route::get('/m-{medical_Type_id}/{location}', [HomePageController::class, 'showHealthMeds'])->name('homepage.healthmeds');
+Route::get('/m-{medical_Type_id}', [HomePageController::class, 'showHealthMeds'])->name('homepage.healthmeds');
+// Route for company types
+Route::get('/{companyType}/{location}', [HomePageController::class, 'showcompanies'])->name('homepage.companies');
+Route::get('/{companyType}', [HomePageController::class, 'showcompanies'])->name('homepage.companies');
+//autocomplete
+Route::get('/searchauto', [AutocompleteController::class, 'index']);
+ Route::post('/autocomplete', [AutocompleteController::class, 'fetch'])->name('autocomplete.fetch');
+ Route::post('/autocomplete/cities', [AutocompleteController::class, 'fetchCities'])->name('autocomplete.fetchCities');
+ Route::post('/autocomplete/dependencies', [AutocompleteController::class, 'fetchDependencies'])->name('autocomplete.fetchDependencies');
+ Route::post('/autocomplete/states', [AutocompleteController::class, 'fetchStates'])->name('autocomplete.fetchStates');
+ Route::post('autocomplete/fetchCategories', [AutocompleteController::class, 'fetchCategories'])->name('autocomplete.fetchCategories');
+ Route::post('/autocomplete/fetchMedicalTypes', [AutocompleteController::class, 'fetchMedicalTypes'])->name('autocomplete.fetchMedicalTypes');
+
+
+
+Route::get('/howitworks', [HomepageController::class, 'showhiw'])->name('howitworks');
+*/
 
 // layout
 Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');
@@ -107,6 +169,29 @@ Route::get('/form/layouts-horizontal', [HorizontalForm::class, 'index'])->name('
 
 // tables
 Route::get('/tables/basic', [TablesBasic::class, 'index'])->name('tables-basic');
+// Route pour afficher le formulaire d'inscription
+Route::get('/inscription', [InscriptionController::class, 'afficherFormulaire'])->name('inscription.formulaire');
+Route::get('/getStateList/{country_id}', [InscriptionController::class, 'getStateList']);
+Route::get('/getDependencyList/{state_id}', [InscriptionController::class, 'getDependencyList']);
+//Route::get('verification/notice', [VerificationController::class, 'showVerificationForm'])->name('verification.notice');
+//Route::post('verification/verify', [VerificationController::class, 'verify'])->name('verification.verify');
+//Route::get('/verify', [VerificationController::class, 'showVerification'])->name('verify.show');
+//Route::post('/verify', [VerificationController::class, 'verifyCode'])->name('verify.code');
+//search controller
+
+
+// Recherche par catégorie
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+// Affichage du profil d'une équipe médicale
+
+
+
+Route::get('/medical-team/{id}', [SearchController::class, 'showProfile'])->name('medicalteam.profile');
+
+Route::get('/pharmacy/{id}', [SearchController::class, 'showpharprofile'])->name('pharmacy.profile');
+
+Route::get('/laboratory/{id}', [SearchController::class, 'showlabprofile'])->name('laboratory.profile');
 
 Route::middleware([
     'auth:sanctum',
@@ -117,3 +202,8 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+// Home Page
+Route::get('/mediplus', function () {
+    return view('layouts.mediplus'); 
+})->name('mediplus.home');

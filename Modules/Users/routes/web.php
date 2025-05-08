@@ -44,15 +44,21 @@ Route::delete('/users/{id}', [UsersController::class, 'destroy'])->name('users.d
 Route::get('/create-medical-team', [MedicalTeamController::class, 'index'])->name('create-medical-team');
 Route::post('/medical-team/store', [MedicalTeamController::class, 'store'])->name('medical-team.store');
 
+
 Route::get('/get-states-by-country/{countryId}', [MedicalTeamController::class, 'getStatesByCountry']);
-Route::get('/get-dependencies-by-state/{stateId}', [MedicalTeamController::class, 'getDependenciesByState']);
-//Route::get('/get-services-by-medical-type/{id}',  [MedicalTeamController::class, 'getServicesByMedicalType'])->name('medical-team.service');
-//Route::get('/get-subservices-by-service-category/{id}',  [MedicalTeamController::class, 'getSubServicesByServiceCategory'])->name('medical-team.subservice.category');
+//Route::get('/get-dependencies-by-state/{stateId}', [MedicalTeamController::class, 'getDependenciesByState']);
+Route::get('/get-services-by-medical-type/{id}',  [MedicalTeamController::class, 'getServicesByMedicalType'])->name('medical-team.service');
+Route::get('/get-subservices-by-service-category/{id}',  [MedicalTeamController::class, 'getSubServicesByServiceCategory'])->name('medical-team.subservice.category');
 Route::get('/medical-team/show/{medicalTypeSlug}', [MedicalTeamController::class, 'showFilteredTeam'])->name('medical-team.showFiltered');
+Route::get('/medical-team/all', [MedicalTeamController::class, 'showAllTeams'])->name('medical-team.showAll');
+
+
 Route::get('/medical-team/{id}', [MedicalTeamController::class, 'showTeamDetails'])->name('medical-team.showDetails');
 Route::get('/medical-team/{id}/edit', [MedicalTeamController::class, 'editForm'])->name('medical-team.editForm');
 Route::delete('/medical-team/{id}', [MedicalTeamController::class, 'destroy'])->name('medical-team.destroy');
 Route::put('/medical-team/{id}/update', [MedicalTeamController::class, 'updateTeamData'])->name('medical-team.update');
+
+
 
 
 
@@ -106,4 +112,36 @@ Route::post('/role_permissions', [RolePermissionController::class, 'store'])->na
 
 //Route::prefix('users')->group(function() {
   //  Route::get('/', 'UsersController@index');
+  
+
+
 //});
+
+// Dashboard principal
+
+
+Route::get('/medical/dashboard/{id}', [MedicalTeamController::class, 'dashboard'])->name('medical.dashboard.byId');
+
+
+
+Route::get('/medical/notifications/{id}', [MedicalTeamController::class, 'notifications'])->name('medical.notifications');
+
+
+Route::get('/medical/appointments/{id}', [MedicalTeamController::class, 'appointments'])
+->name('medical.appointments');
+
+Route::patch('/medical/notifications/{id}/read', [MedicalTeamController::class, 'markNotificationAsRead'])
+    ->name('medical.notifications.read');
+
+    Route::get('/medical/dashboard/{id}', [MedicalTeamController::class, 'dashboardById'])->name('medical.dashboard.byId');
+
+    Route::get('/medical/dashboard', [MedicalTeamController::class, 'dashboard'])
+    ->name('medical.dashboard');
+
+   
+
+
+
+    Route::get('/calendar', [MedicalTeamController::class, 'calendar'])->name('medical.calendar');
+
+    
